@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <style>
+    body {
+      font: 14px system-ui, sans-serif;
+      min-width: 285px;
+      max-width: 320px;
+      padding: 13px;
+      background: #17191f;
+      color: #f4f4f5;
+    }
+    h3 { margin: 0 0 10px; font-size: 15px; }
+    #status { margin: 8px 0; color: #d5d8e0; font-weight: 500; }
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+    .badge-ok { background: #166534; color: #bbf7d0; }
+    .badge-warn { background: #854d0e; color: #fef08a; }
+    .badge-err { background: #991b1b; color: #fecaca; }
+    .info-row { margin: 4px 0; color: #a1a1aa; font-size: 13px; }
+    .info-val { color: #38bdf8; font-weight: bold; }
+    #setup-guide {
+      margin-top: 8px;
+      padding: 9px 10px;
+      background: #27221a;
+      border-left: 3px solid #f59e0b;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #fde68a;
+      line-height: 1.5;
+    }
+    #setup-guide strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #fbbf24;
+    }
+    .dl-btn {
+      display: inline-block;
+      margin-top: 7px;
+      padding: 5px 10px;
+      background: #2563eb;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      border: none;
+    }
+    .dl-btn:hover { background: #1d4ed8; }
+    #error-box {
+      margin-top: 8px;
+      padding: 8px;
+      background: #27272a;
+      border-left: 3px solid #ef4444;
+      font-size: 12px;
+      color: #fca5a5;
+      word-break: break-word;
+      line-height: 1.45;
+    }
+    small { display: block; margin-top: 10px; color: #a8adba; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <h3>NFSU2 Revived RPC</h3>
+  <div id="status">検出状態を確認中...</div>
+  <div id="host-status" class="badge badge-warn" hidden>RPCホスト未接続</div>
+  <div id="extra-info" hidden>
+    <div class="info-row">ゲーム状態: <span id="mode-val" class="info-val">-</span></div>
+    <div class="info-row" id="genre-row" hidden>ジャンル: <span id="genre-val" class="info-val">-</span></div>
+    <div class="info-row" id="region-row" hidden>走行地域: <span id="region-val" class="info-val">-</span></div>
+    <div class="info-row" id="rpc-row" hidden>表示文字列: <span id="rpc-val" class="info-val">-</span></div>
+  </div>
+  <div id="setup-guide" hidden>
+    <strong>PC連携プログラムが未導入です</strong>
+    <span>Discord にプレイ状況を反映するには、PC側連携インストーラー（<code>NFSU2_Revived_RPC_Setup.exe</code>）を実行してください。</span>
+    <div id="dl-wrap" hidden>
+      <button id="dl-btn" class="dl-btn" type="button">インストーラーを入手する</button>
+    </div>
+  </div>
+  <div id="error-box" hidden></div>
+  <small>nfsu2.xyz のタブが開いていれば表示を継続します。Discordデスクトップアプリが起動している必要があります。</small>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+  "name": "NFSU2 Revived Discord RPC",
+  "version": "0.5.0",
+  "description": "Automatic Discord Rich Presence game mode detection for Need for Speed: Underground 2 Revived (nfsu2.xyz).",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "nfsu2-revived-rpc@yamama",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["browsingActivity"]
+      }
+    }
+  },
+  "permissions": ["tabs", "nativeMessaging", "storage"],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://nfsu2.xyz/*"],
+      "js": ["detector.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "browser_action": {
+    "default_title": "NFSU2 Revived Discord RPC",
+    "default_popup": "popup.html"
+  }
+}
