@@ -1,3 +1,4 @@
+[日本語](./README_JA.md)
 # NFSU2 Revived Discord RPC
 
 A **Firefox extension** and **Windows Companion App** that automatically detects your gameplay status for **Need for Speed: Underground 2 Revived** running on `[https://nfsu2.xyz/](https://nfsu2.xyz/)` and reflects it in real-time as your Discord activity (Rich Presence).
