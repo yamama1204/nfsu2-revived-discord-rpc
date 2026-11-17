@@ -1,103 +1,131 @@
 # NFSU2 Revived Discord RPC
 
-`https://nfsu2.xyz/` で動作する **Need for Speed: Underground 2 Revived** のプレイ状況を自動検出し、Discord のアクティビティ（Rich Presence）へリアルタイム反映する **Firefox 拡張機能** と **Windows 連携アプリ（Companion App）** です。
+A **Firefox extension** and **Windows Companion App** that automatically detects your gameplay status for **Need for Speed: Underground 2 Revived** running on `[https://nfsu2.xyz/](https://nfsu2.xyz/)` and reflects it in real-time as your Discord activity (Rich Presence).
 
 ---
 
-## 主な機能
+## Key Features
 
-- **プレイ状態のリアルタイム自動判別**（公開DOMの `MutationObserver` による検知）:
-  - `🚗 Free Roam`: フリーローム走行中（スケートボード・ドローン含む）
-  - `🏁 Racing: <ジャンル>` / `🏁 Racing`: レース中（イベント・ロビー等から判別可能な場合は英語ジャンル名を併記）
-    - 対応ジャンル: `Circuit`, `Sprint`, `Drag`, `Drift`, `Street X`, `Underground Racing League`, `Outrun`, `Downhill Drift`
-  - `🔧 In Menu / Garage or Pause`: ガレージ、ショップ、メインメニュー、ポーズ画面
-  - `Offline`: ゲーム起動前・終了後のランチャー画面（`nfsu2.xyz` のタブをすべて閉じると RPC 表示も自動終了します）
-- **仕様上の制限事項**:
-  - ガレージ内のバトルリスト（ワールドマップ）/ クイックレースのジャンル名や詳細座標は、サイトの非公開 Wasm メモリ内にのみ存在しアンチチート規約に抵触するため読み取りを行わず、公開DOM情報のみで安全に動作します。
+* **Real-time Automatic Game State Detection** (via `MutationObserver` on public DOM elements):
+* `🚗 Free Roam`: Cruising in free roam (including skateboard and drones).
+* `🏁 Racing: <Genre>` / `🏁 Racing`: In a race (English genre name is included if it can be determined from events, lobbies, etc.).
+* Supported genres: `Circuit`, `Sprint`, `Drag`, `Drift`, `Street X`, `Underground Racing League`, `Outrun`, `Downhill Drift`.
 
----
 
-## 一般ユーザー向け：導入手順
+* `🔧 In Menu / Garage or Pause`: Garage, shop, main menu, or pause screen.
+* `Offline`: Launcher screen before the game starts or after it ends (closing all `nfsu2.xyz` tabs will also automatically end the RPC display).
 
-本ツールを使うには、**① Firefox 拡張機能** と **② PC側連携アプリ（インストーラー）** の2つを導入します（Python等のインストールや管理者権限は不要です）。
 
-### 1. PC側連携アプリのインストール
-1. 配布ページ（Releases 等）から **`NFSU2_Revived_RPC_Setup_vX.X.X.exe`** をダウンロードして実行します。
-   - ※初回起動時に Windows の青い確認画面（「Windows によって PC が保護されました」）が表示された場合は、**「詳細情報」→「実行」** をクリックしてください。
-2. 画面の案内に従ってインストールを完了します（`%LOCALAPPDATA%\Programs\NFSU2RevivedRPC` に導入され、Firefox への連携登録も自動で行われます）。
+* **Design Limitations**:
+* Battle lists in the garage (world map), quick race genre names, and detailed coordinates exist only within the site's private Wasm memory and violate anti-cheat terms. Therefore, they are not read, and the app operates safely using only public DOM information.
 
-### 2. Firefox 拡張機能の追加
-1. Firefox アドオンページ（または配布されている署名済み `.xpi` ファイル）から **NFSU2 Revived Discord RPC** を Firefox に追加します。
-2. **Discord デスクトップアプリ** を起動した状態で、Firefox で `https://nfsu2.xyz/` を開くと自動的に Discord のステータスへ反映されます。
 
-### アンインストール方法
-- **PC側連携アプリ**: Windows の **「設定」＞「アプリ」＞「インストールされているアプリ」** から `NFSU2 Revived Discord RPC Host` をアンインストールしてください（レジストリ登録やログも自動で削除されます）。
-- **Firefox 拡張機能**: Firefox のアドオン管理（`about:addons`）から削除してください。
 
 ---
 
-## 開発者向け：ディレクトリ構成と編集・ビルドガイド
+## For General Users: Installation Guide
 
-本リポジトリは、後から自由にコードを編集・改造したり GitHub で公開・共同開発しやすいように設計されています。
+To use this tool, you need to install two components: **① The Firefox Extension** and **② The PC Companion App (Installer)**. (No Python installation or administrator privileges required).
 
-### フォルダ構成
+### 1. Installing the PC Companion App
+
+1. Download **`NFSU2_Revived_RPC_Setup_vX.X.X.exe`** from the distribution page (Releases, etc.) and run it.
+* *Note: If Windows Defender shows a blue confirmation screen ("Windows protected your PC") on first launch, click **"More info"** -> **"Run anyway"**.*
+
+
+2. Follow the on-screen instructions to complete the installation (it will be installed to `%LOCALAPPDATA%\Programs\NFSU2RevivedRPC`, and the Firefox integration registration is done automatically).
+
+### 2. Adding the Firefox Extension
+
+1. Add **NFSU2 Revived Discord RPC** to Firefox from the Firefox Add-ons page (or via the provided signed `.xpi` file).
+2. With the **Discord desktop app** running, open `[https://nfsu2.xyz/](https://nfsu2.xyz/)` in Firefox, and it will automatically reflect in your Discord status.
+
+### How to Uninstall
+
+* **PC Companion App**: Uninstall `NFSU2 Revived Discord RPC Host` from Windows **Settings > Apps > Installed apps** (registry entries and logs will also be automatically deleted).
+* **Firefox Extension**: Remove it from Firefox Add-on management (`about:addons`).
+
+---
+
+## For Developers: Directory Structure, Editing, and Build Guide
+
+This repository is designed to make it easy for you to freely edit and modify the code, or publish and co-develop it on GitHub.
+
+### Folder Structure
 
 ```text
-├── extension/                    # 【① Firefox拡張機能】（JS / HTML / manifest.json）
-│   ├── manifest.json             # 拡張機能定義（ID: nfsu2-revived-rpc@yamama）
-│   ├── detector.js               # nfsu2.xyz 上のゲーム状態検出スクリプト
-│   ├── background.js             # タブ監視・Native Messaging 送受信
-│   ├── popup.html                # ツールバーアイコンクリック時のポップアップUI
-│   └── popup.js                  # ポップアップ制御（配布先URL設定定数あり）
+├── extension/                    # [① Firefox Extension] (JS / HTML / manifest.json)
+│   ├── manifest.json             # Extension definition (ID: nfsu2-revived-rpc@yamama)
+│   ├── detector.js               # Game state detection script on nfsu2.xyz
+│   ├── background.js             # Tab monitoring & Native Messaging send/receive
+│   ├── popup.html                # Popup UI when clicking the toolbar icon
+│   └── popup.js                  # Popup control (contains distribution URL setting constant)
 │
-├── companion_app/                # 【② PC側連携プログラム（Native Messaging Host）】
-│   ├── nfsu2_rpc_host.py         # Python製ホスト本体（Discord IPC 通信・自己登録機能）
-│   ├── config.json               # Discord Application ID (client_id) 設定
-│   ├── requirements.txt          # Python 依存パッケージ定義
-│   └── installer.iss             # Inno Setup 6 インストーラー定義スクリプト
+├── companion_app/                # [② PC Companion Program (Native Messaging Host)]
+│   ├── nfsu2_rpc_host.py         # Python-based host core (Discord IPC communication & auto-registration)
+│   ├── config.json               # Discord Application ID (client_id) settings
+│   ├── requirements.txt          # Python dependency packages definition
+│   └── installer.iss             # Inno Setup 6 installer definition script
 │
-├── scripts/                      # 【③ 開発・ビルド自動化スクリプト】
-│   ├── dev_setup.ps1             # 開発用：再ビルド不要でローカルコードをFirefoxへ直接登録
-│   ├── build_extension.ps1       # 配布用：extension/ から AMO提出用 ZIP を作成
-│   ├── build_companion.ps1       # 配布用：Setup.exe と Portable.zip を作成
-│   └── build_all.ps1             # 配布用：すべての配布パッケージを一括ビルド
+├── scripts/                      # [③ Development & Build Automation Scripts]
+│   ├── dev_setup.ps1             # For dev: Registers local code directly to Firefox without rebuilding
+│   ├── build_extension.ps1       # For distribution: Creates ZIP for AMO submission from extension/
+│   ├── build_companion.ps1       # For distribution: Creates Setup.exe and Portable.zip
+│   └── build_all.ps1             # For distribution: Bulk-builds all distribution packages
 │
-└── .github/workflows/release.yml # GitHub Actions によるクラウド自動ビルド設定
+└── .github/workflows/release.yml # Cloud automated build settings via GitHub Actions
+
 ```
 
-### ローカルでの編集・テスト方法（毎回インストーラーを作る必要はありません）
+### Local Editing and Testing Method (No need to create an installer every time)
 
-1. **初回のみ開発モード登録を実行**（要 Python 3.10+）:
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .\scripts\dev_setup.ps1
-   ```
-   これにより、`companion_app/nfsu2_rpc_host.py` がそのまま Firefox から呼び出されるようになります（Python コードを編集しても EXE の再ビルドなしで即反映されます）。
-2. **Firefox で拡張機能を一時読み込み**:
-   - Firefox のアドレスバーに `about:debugging#/runtime/this-firefox` を入力します。
-   - **「一時的なアドオンを読み込む...」** を押し、`extension/manifest.json` を選択します。
-   - `extension/` 内の JS を編集した際は、同画面の **「再読み込み」** ボタンを押してください。
-3. 開発モードのレジストリ登録を解除したい場合:
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .\scripts\dev_setup.ps1 -Unregister
-   ```
+1. **Run development mode registration once** (Requires Python 3.10+):
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\dev_setup.ps1
 
-### 配布用パッケージ（`Setup.exe` & 拡張機能 `.zip`）のビルド方法
+```
 
-#### 方法A：手元の Windows PC でビルドする
-1. 事前に **Python 3.10+** と **[Inno Setup 6](https://jrsoftware.org/isdl.php)**（または `winget install JRSoftware.InnoSetup`）をインストールします。
-2. 以下のスクリプトを実行します:
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .\scripts\build_all.ps1
-   ```
-3. `release/` フォルダ内に以下の3ファイルが生成されます:
-   - `nfsu2-revived-rpc-extension-vX.X.X.zip` （Mozilla AMO 提出用）
-   - `NFSU2_Revived_RPC_Setup_vX.X.X.exe` （一般ユーザー配布用インストーラー）
-   - `NFSU2_Revived_RPC_Portable_vX.X.X.zip` （ポータブル版）
 
-#### 方法B：GitHub 上で自動ビルドする（GitHub Actions）
-- このフォルダをそのまま GitHub リポジトリへ Push し、GitHub の **Actions** タブから `Build & Release Packages` を手動実行（Run workflow）するか、`v0.5.0` のようなタグを Push すると、クラウド上で自動的に `Setup.exe` と `.zip` がビルドされ、GitHub Releases に添付されます。
+This allows `companion_app/nfsu2_rpc_host.py` to be called directly by Firefox (editing Python code takes effect immediately without rebuilding the EXE).
+2. **Temporarily load the extension in Firefox**:
+* Type `about:debugging#/runtime/this-firefox` into the Firefox address bar.
+* Click **"Load Temporary Add-on..."** and select `extension/manifest.json`.
+* When you edit JS inside `extension/`, click the **"Reload"** button on that same screen.
 
-### リリース・公開時のチェックリスト
-1. **配布先URLの設定（任意）**: 配布ページのURL（GitHub Releases 等）が決まったら、`extension/popup.js` 先頭の `COMPANION_DOWNLOAD_URL` に URL を記入すると、連携アプリ未導入ユーザーのポップアップ画面にダウンロードボタンが表示されます。
-2. **Mozilla AMO での拡張機能署名（必須・無料）**: 一般ユーザーの通常版 Firefox にインストールできるようにするため、[Firefox Add-on Developer Hub](https://addons.mozilla.org/ja/developers/) に `release/nfsu2-revived-rpc-extension-vX.X.X.zip` をアップロードし、ストア公開（Listed）または自己配布用署名（Unlisted `.xpi` 取得）を行ってください。
-   - ※重要：`extension/manifest.json` の `gecko.id`（`nfsu2-revived-rpc@yamama`）を変更する場合は、必ず `companion_app/nfsu2_rpc_host.py` の `ALLOWED_EXTENSION_IDS` も同じ値に揃えてください。
+
+3. If you want to unregister the development mode registry:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\dev_setup.ps1 -Unregister
+
+```
+
+
+
+### How to Build Distribution Packages (`Setup.exe` & Extension `.zip`)
+
+#### Method A: Build on your local Windows PC
+
+1. Install **Python 3.10+** and **[Inno Setup 6](https://jrsoftware.org/isdl.php)** (or via `winget install JRSoftware.InnoSetup`) beforehand.
+2. Run the following script:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build_all.ps1
+
+```
+
+
+3. The following three files will be generated in the `release/` folder:
+* `nfsu2-revived-rpc-extension-vX.X.X.zip` (For Mozilla AMO submission)
+* `NFSU2_Revived_RPC_Setup_vX.X.X.exe` (Installer for general users)
+* `NFSU2_Revived_RPC_Portable_vX.X.X.zip` (Portable version)
+
+
+
+#### Method B: Automatic build on GitHub (GitHub Actions)
+
+* Push this folder as-is to a GitHub repository, and either manually run `Build & Release Packages` from the **Actions** tab on GitHub, or push a tag like `v0.5.0`. `Setup.exe` and `.zip` will be automatically built in the cloud and attached to GitHub Releases.
+
+### Release & Publication Checklist
+
+1. **Setting the Distribution URL (Optional)**: Once the distribution page URL (GitHub Releases, etc.) is decided, enter the URL into `COMPANION_DOWNLOAD_URL` at the top of `extension/popup.js`. This will display a download button on the popup screen for users who haven't installed the companion app yet.
+2. **Extension Signing on Mozilla AMO (Required & Free)**: To allow installation on regular versions of Firefox for general users, upload `release/nfsu2-revived-rpc-extension-vX.X.X.zip` to the [Firefox Add-on Developer Hub](https://addons.mozilla.org/developers/) and proceed with store publication (Listed) or self-distribution signing (acquiring an Unlisted `.xpi`).
+* *Important: If you change the `gecko.id` (`nfsu2-revived-rpc@yamama`) in `extension/manifest.json`, make sure to match it with `ALLOWED_EXTENSION_IDS` in `companion_app/nfsu2_rpc_host.py`.*
