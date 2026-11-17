@@ -1,3 +1,4 @@
+[English](./README.md)
 # NFSU2 Revived Discord RPC
 
 `https://nfsu2.xyz/` で動作する **Need for Speed: Underground 2 Revived** のプレイ状況を自動検出し、Discord のアクティビティ（Rich Presence）へリアルタイム反映する **Firefox 拡張機能** と **Windows 連携アプリ（Companion App）** です。
